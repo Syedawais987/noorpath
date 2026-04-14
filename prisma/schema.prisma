@@ -70,6 +70,8 @@ model User {
   invoices        Invoice[]
   notifications   Notification[]
 
+  @@index([role])
+  @@index([createdAt])
   @@map("users")
 }
 
@@ -116,6 +118,7 @@ model EnrollmentRequest {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([status])
   @@map("enrollment_requests")
 }
 
@@ -148,6 +151,8 @@ model Session {
   student     User          @relation("StudentSessions", fields: [studentId], references: [id])
   sessionNote SessionNote?
 
+  @@index([studentId, status])
+  @@index([startTime])
   @@map("sessions")
 }
 
@@ -162,6 +167,7 @@ model SessionNote {
 
   session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
+  @@index([attendanceStatus])
   @@map("session_notes")
 }
 
@@ -195,6 +201,7 @@ model Assignment {
   student User @relation("StudentAssignments", fields: [studentId], references: [id])
   teacher User @relation("TeacherAssignments", fields: [teacherId], references: [id])
 
+  @@index([studentId, status])
   @@map("assignments")
 }
 
@@ -222,6 +229,8 @@ model Invoice {
 
   student User @relation(fields: [studentId], references: [id])
 
+  @@index([studentId, status])
+  @@index([dueDate])
   @@map("invoices")
 }
 
@@ -235,5 +244,6 @@ model Notification {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, readAt])
   @@map("notifications")
 }
