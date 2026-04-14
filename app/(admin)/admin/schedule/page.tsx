@@ -189,9 +189,19 @@ export default function AdminSchedulePage() {
                         </Button>
                       </>
                     )}
-                    {s.status === "SCHEDULED" && (
+                    {s.status === "COMPLETED" && !s.sessionNote && (
                       <Button size="sm" variant="outline" className="min-h-[44px]" onClick={() => setNoteModal(s.id)}>
-                        {s.sessionNote ? "Edit Notes" : "Add Notes"}
+                        Add Notes
+                      </Button>
+                    )}
+                    {(s.status === "SCHEDULED" || s.status === "COMPLETED") && s.sessionNote && (
+                      <Button size="sm" variant="ghost" className="min-h-[44px]" onClick={() => setNoteModal(s.id)}>
+                        Edit Notes
+                      </Button>
+                    )}
+                    {s.status === "SCHEDULED" && !s.dailyRoomUrl && !s.sessionNote && (
+                      <Button size="sm" variant="outline" className="min-h-[44px]" onClick={() => setNoteModal(s.id)}>
+                        Add Notes
                       </Button>
                     )}
                   </div>

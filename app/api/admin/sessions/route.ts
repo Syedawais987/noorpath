@@ -10,6 +10,16 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Auto-complete sessions that have passed their end time
+    const now = new Date();
+    await prisma.session.updateMany({
+      where: {
+        status: "SCHEDULED",
+        endTime: { lt: now },
+      },
+      data: { status: "COMPLETED" },
+    });
+
     const sessions = await prisma.session.findMany({
       include: {
         student: { select: { name: true, email: true } },
