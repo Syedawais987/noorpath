@@ -33,6 +33,12 @@ enum AssignmentStatus {
   REDO
 }
 
+enum EnrollmentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum InvoiceStatus {
   PENDING
   PAID
@@ -54,9 +60,10 @@ model User {
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime  @updatedAt @map("updated_at")
 
-  accounts        Account[]
-  studentProfile  StudentProfile?
-  teacherSessions Session[]       @relation("TeacherSessions")
+  accounts           Account[]
+  studentProfile     StudentProfile?
+  enrollmentRequest  EnrollmentRequest?
+  teacherSessions    Session[]       @relation("TeacherSessions")
   studentSessions Session[]       @relation("StudentSessions")
   assignments     Assignment[]    @relation("StudentAssignments")
   createdAssignments Assignment[] @relation("TeacherAssignments")
@@ -94,6 +101,22 @@ model PasswordResetToken {
 
   @@unique([email, token])
   @@map("password_reset_tokens")
+}
+
+model EnrollmentRequest {
+  id                String           @id @default(cuid())
+  userId            String           @unique @map("user_id")
+  relationship      String
+  location          String?
+  preferredSchedule String?          @map("preferred_schedule")
+  status            EnrollmentStatus @default(PENDING)
+  adminMessage      String?          @map("admin_message")
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("enrollment_requests")
 }
 
 model StudentProfile {
