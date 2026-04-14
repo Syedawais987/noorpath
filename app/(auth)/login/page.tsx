@@ -41,7 +41,12 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/dashboard");
+    // Fetch session to determine role-based redirect
+    const sessionRes = await fetch("/api/auth/session");
+    const session = await sessionRes.json();
+    const isTeacher = session?.user?.role === "TEACHER";
+
+    router.push(isTeacher ? "/admin" : "/dashboard");
     router.refresh();
   }
 
