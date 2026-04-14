@@ -3,9 +3,18 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { enrollmentSchema } from "@/lib/validations/enrollment";
 import { sendEmail, enrollmentConfirmationEmail } from "@/lib/email";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   try {
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    if (!rateLimit(`enroll:${ip}`, 3, 3600000)) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 },
+      );
+    }
+
     const body = await request.json();
     const validated = enrollmentSchema.safeParse(body);
 
@@ -31,7 +40,7 @@ export async function POST(request: Request) {
 
       if (existingEnrollment) {
         return NextResponse.json(
-          { error: "An enrollment request already exists for this email" },
+          { error: "Unable to process this enrollment request. Please contact us if you need help." },
           { status: 409 },
         );
       }

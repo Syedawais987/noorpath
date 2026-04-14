@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { notify } from "@/lib/notify";
 import { invoiceCreatedEmail } from "@/lib/email";
+import { createInvoiceSchema } from "@/lib/validations/admin";
 
 export async function GET() {
   try {
@@ -30,23 +31,27 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
+    const validated = createInvoiceSchema.safeParse(body);
+    if (!validated.success) {
+      return NextResponse.json({ error: validated.error.errors[0].message }, { status: 400 });
+    }
 
     const invoice = await prisma.invoice.create({
       data: {
-        studentId: body.studentId,
-        amount: parseFloat(body.amount),
-        currency: body.currency || "PKR",
-        dueDate: new Date(body.dueDate),
+        studentId: validated.data.studentId,
+        amount: validated.data.amount,
+        currency: validated.data.currency,
+        dueDate: new Date(validated.data.dueDate),
       },
     });
 
-    const student = await prisma.user.findUnique({ where: { id: body.studentId }, select: { name: true, email: true } });
+    const student = await prisma.user.findUnique({ where: { id: validated.data.studentId }, select: { name: true, email: true } });
     if (student) {
-      const amountStr = `${body.currency || "PKR"} ${parseFloat(body.amount).toLocaleString()}`;
-      const dueDateStr = new Date(body.dueDate).toLocaleDateString();
+      const amountStr = `${validated.data.currency} ${validated.data.amount.toLocaleString()}`;
+      const dueDateStr = new Date(validated.data.dueDate).toLocaleDateString();
       const emailContent = invoiceCreatedEmail(student.name, amountStr, dueDateStr);
       await notify({
-        userId: body.studentId,
+        userId: validated.data.studentId,
         type: "invoice_created",
         message: `New invoice: ${amountStr} due ${dueDateStr}`,
         email: { to: student.email, ...emailContent },

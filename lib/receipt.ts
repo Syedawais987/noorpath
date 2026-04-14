@@ -1,3 +1,5 @@
+import { escapeHtml } from "@/lib/utils";
+
 export function generateReceiptHTML({
   invoiceId,
   studentName,
@@ -13,6 +15,11 @@ export function generateReceiptHTML({
   paidAt: Date;
   paymentMethod: string | null;
 }): string {
+  const safeName = escapeHtml(studentName);
+  const safeMethod = escapeHtml(paymentMethod || "Manual");
+  const safeId = escapeHtml(invoiceId.slice(-8).toUpperCase());
+  const safeCurrency = escapeHtml(currency);
+
   return `
     <!DOCTYPE html>
     <html>
@@ -43,11 +50,11 @@ export function generateReceiptHTML({
         <div class="body">
           <div class="row">
             <span class="label">Receipt #</span>
-            <span class="value">${invoiceId.slice(-8).toUpperCase()}</span>
+            <span class="value">${safeId}</span>
           </div>
           <div class="row">
             <span class="label">Student</span>
-            <span class="value">${studentName}</span>
+            <span class="value">${safeName}</span>
           </div>
           <div class="row">
             <span class="label">Date Paid</span>
@@ -55,7 +62,7 @@ export function generateReceiptHTML({
           </div>
           <div class="row">
             <span class="label">Payment Method</span>
-            <span class="value">${paymentMethod || "Manual"}</span>
+            <span class="value">${safeMethod}</span>
           </div>
           <div class="row">
             <span class="label">Status</span>
@@ -64,7 +71,7 @@ export function generateReceiptHTML({
         </div>
         <div class="total">
           <span class="label">Total Paid</span>
-          <span class="amount">${currency} ${amount.toLocaleString()}</span>
+          <span class="amount">${safeCurrency} ${amount.toLocaleString()}</span>
         </div>
         <div class="footer">
           <p>Thank you for your payment. JazakAllahu Khairan.</p>

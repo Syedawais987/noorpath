@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { sessionNoteSchema } from "@/lib/validations/admin";
 
 export async function POST(
   request: Request,
@@ -13,21 +14,25 @@ export async function POST(
     }
 
     const body = await request.json();
+    const validated = sessionNoteSchema.safeParse(body);
+    if (!validated.success) {
+      return NextResponse.json({ error: validated.error.errors[0].message }, { status: 400 });
+    }
 
     await prisma.sessionNote.upsert({
       where: { sessionId: params.id },
       update: {
-        content: body.content,
-        studentFeedback: body.studentFeedback,
-        tajweedScore: body.tajweedScore ? parseInt(body.tajweedScore) : null,
-        attendanceStatus: body.attendanceStatus || "PRESENT",
+        content: validated.data.content || null,
+        studentFeedback: validated.data.studentFeedback || null,
+        tajweedScore: validated.data.tajweedScore || null,
+        attendanceStatus: validated.data.attendanceStatus,
       },
       create: {
         sessionId: params.id,
-        content: body.content,
-        studentFeedback: body.studentFeedback,
-        tajweedScore: body.tajweedScore ? parseInt(body.tajweedScore) : null,
-        attendanceStatus: body.attendanceStatus || "PRESENT",
+        content: validated.data.content || null,
+        studentFeedback: validated.data.studentFeedback || null,
+        tajweedScore: validated.data.tajweedScore || null,
+        attendanceStatus: validated.data.attendanceStatus,
       },
     });
 

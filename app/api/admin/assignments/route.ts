@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { notify } from "@/lib/notify";
 import { assignmentPostedEmail } from "@/lib/email";
+import { createAssignmentSchema } from "@/lib/validations/admin";
 
 export async function GET() {
   try {
@@ -30,26 +31,30 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
+    const validated = createAssignmentSchema.safeParse(body);
+    if (!validated.success) {
+      return NextResponse.json({ error: validated.error.errors[0].message }, { status: 400 });
+    }
 
     const assignment = await prisma.assignment.create({
       data: {
         teacherId: session.user.id,
-        studentId: body.studentId,
-        title: body.title,
-        description: body.description || null,
-        dueDate: body.dueDate ? new Date(body.dueDate) : null,
+        studentId: validated.data.studentId,
+        title: validated.data.title,
+        description: validated.data.description || null,
+        dueDate: validated.data.dueDate ? new Date(validated.data.dueDate) : null,
       },
     });
 
-    const student = await prisma.user.findUnique({ where: { id: body.studentId }, select: { name: true, email: true } });
+    const student = await prisma.user.findUnique({ where: { id: validated.data.studentId }, select: { name: true, email: true } });
     if (student) {
       const emailContent = assignmentPostedEmail(student.name, body.title);
       await notify({
-        userId: body.studentId,
+        userId: validated.data.studentId,
         type: "assignment_posted",
-        message: `New assignment: ${body.title}`,
+        message: `New assignment: ${validated.data.title}`,
         email: { to: student.email, ...emailContent },
-        whatsapp: { to: "", templateName: "assignment_posted", variables: [student.name, body.title] },
+        whatsapp: { to: "", templateName: "assignment_posted", variables: [student.name, validated.data.title] },
       });
     }
 

@@ -53,7 +53,7 @@ export async function PATCH(
       });
 
       const token = crypto.randomBytes(32).toString("hex");
-      const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+      const expires = new Date(Date.now() + 48 * 60 * 60 * 1000); // 48 hours
 
       await prisma.passwordResetToken.create({
         data: {

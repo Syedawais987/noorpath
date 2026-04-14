@@ -31,6 +31,16 @@ export async function PATCH(
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
     }
 
+    // Ownership check: students can only manage their own sessions
+    if (session.user.role !== "TEACHER" && classSession.studentId !== session.user.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Teachers can only manage sessions they teach
+    if (session.user.role === "TEACHER" && classSession.teacherId !== session.user.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     // CONFIRM — teacher only
     if (action === "confirm") {
       if (session.user.role !== "TEACHER") {

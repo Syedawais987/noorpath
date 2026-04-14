@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { createProgressSchema } from "@/lib/validations/admin";
 
 export async function GET() {
   try {
@@ -30,14 +31,18 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
+    const validated = createProgressSchema.safeParse(body);
+    if (!validated.success) {
+      return NextResponse.json({ error: validated.error.errors[0].message }, { status: 400 });
+    }
 
     await prisma.progressEntry.create({
       data: {
-        studentId: body.studentProfileId,
-        surahName: body.surahName || null,
-        paraNumber: body.paraNumber ? parseInt(body.paraNumber) : null,
-        lessonNumber: body.lessonNumber ? parseInt(body.lessonNumber) : null,
-        notes: body.notes || null,
+        studentId: validated.data.studentProfileId,
+        surahName: validated.data.surahName || null,
+        paraNumber: validated.data.paraNumber || null,
+        lessonNumber: validated.data.lessonNumber || null,
+        notes: validated.data.notes || null,
       },
     });
 

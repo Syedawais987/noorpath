@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { notify } from "@/lib/notify";
 import { sendEmail } from "@/lib/email";
+import { updateInvoiceSchema } from "@/lib/validations/admin";
 import { generateReceiptHTML } from "@/lib/receipt";
 
 export async function PATCH(
@@ -16,19 +17,23 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const paidAt = body.status === "PAID" ? new Date() : null;
+    const validated = updateInvoiceSchema.safeParse(body);
+    if (!validated.success) {
+      return NextResponse.json({ error: validated.error.errors[0].message }, { status: 400 });
+    }
+    const paidAt = validated.data.status === "PAID" ? new Date() : null;
 
     const invoice = await prisma.invoice.update({
       where: { id: params.id },
       data: {
-        status: body.status,
+        status: validated.data.status,
         paidAt,
-        paymentMethod: body.paymentMethod || "Manual",
+        paymentMethod: validated.data.paymentMethod || "Manual",
       },
       include: { student: { select: { id: true, name: true, email: true } } },
     });
 
-    if (body.status === "PAID" && paidAt) {
+    if (validated.data.status === "PAID" && paidAt) {
       const receiptHtml = generateReceiptHTML({
         invoiceId: invoice.id,
         studentName: invoice.student.name,

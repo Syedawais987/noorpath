@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { createSessionSchema } from "@/lib/validations/admin";
 
 export async function GET() {
   try {
@@ -31,7 +32,11 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { studentId, startTime, duration } = body;
+    const validated = createSessionSchema.safeParse(body);
+    if (!validated.success) {
+      return NextResponse.json({ error: validated.error.errors[0].message }, { status: 400 });
+    }
+    const { studentId, startTime, duration } = validated.data;
 
     const start = new Date(startTime);
     const end = new Date(start.getTime() + duration * 60000);

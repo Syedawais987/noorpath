@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { createAvailabilitySchema } from "@/lib/validations/admin";
 
 export async function GET() {
   try {
@@ -27,12 +28,16 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
+    const validated = createAvailabilitySchema.safeParse(body);
+    if (!validated.success) {
+      return NextResponse.json({ error: validated.error.errors[0].message }, { status: 400 });
+    }
 
     const slot = await prisma.availability.create({
       data: {
-        dayOfWeek: body.dayOfWeek,
-        startTime: body.startTime,
-        endTime: body.endTime,
+        dayOfWeek: validated.data.dayOfWeek,
+        startTime: validated.data.startTime,
+        endTime: validated.data.endTime,
       },
     });
 
