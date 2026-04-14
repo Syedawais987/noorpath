@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface StudentDetail {
@@ -29,19 +31,40 @@ interface StudentDetail {
     sessionNote: { tajweedScore: number | null; attendanceStatus: string; studentFeedback: string | null } | null;
   }[];
   assignments: { id: string; title: string; status: string; dueDate: string | null }[];
-  enrollmentRequest: { status: string; relationship: string; location: string | null } | null;
+  enrollmentRequest: { id: string; status: string; relationship: string; location: string | null } | null;
 }
 
 export default function StudentDetailPage({ params }: { params: { id: string } }) {
   const [student, setStudent] = useState<StudentDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [rejectMessage, setRejectMessage] = useState("");
+  const [showReject, setShowReject] = useState(false);
 
-  useEffect(() => {
+  function fetchStudent() {
     fetch(`/api/admin/students/${params.id}`)
       .then((r) => r.ok ? r.json() : null)
       .then((d) => setStudent(d?.student || null))
       .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    fetchStudent();
   }, [params.id]);
+
+  async function handleEnrollmentAction(status: "APPROVED" | "REJECTED") {
+    if (!student?.enrollmentRequest) return;
+    setActionLoading(true);
+    await fetch(`/api/enroll/${student.enrollmentRequest.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status, adminMessage: rejectMessage || undefined }),
+    });
+    setActionLoading(false);
+    setShowReject(false);
+    setRejectMessage("");
+    fetchStudent();
+  }
 
   if (loading) {
     return (
@@ -92,6 +115,53 @@ export default function StudentDetailPage({ params }: { params: { id: string } }
           </div>
         </CardContent>
       </Card>
+
+      {/* Enrollment Actions */}
+      {student.enrollmentRequest?.status === "PENDING" && (
+        <Card className="border-secondary">
+          <CardContent className="flex flex-wrap items-center gap-3 p-4">
+            <p className="font-medium">Enrollment is pending approval.</p>
+            <Button
+              className="min-h-[44px] gap-2"
+              disabled={actionLoading}
+              onClick={() => handleEnrollmentAction("APPROVED")}
+            >
+              {actionLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle className="h-4 w-4" />}
+              Approve
+            </Button>
+            {showReject ? (
+              <div className="flex flex-1 flex-wrap items-center gap-2">
+                <Input
+                  placeholder="Reason (optional)"
+                  value={rejectMessage}
+                  onChange={(e) => setRejectMessage(e.target.value)}
+                  className="min-w-[200px]"
+                />
+                <Button
+                  variant="destructive"
+                  className="min-h-[44px]"
+                  disabled={actionLoading}
+                  onClick={() => handleEnrollmentAction("REJECTED")}
+                >
+                  Confirm Reject
+                </Button>
+                <Button variant="ghost" className="min-h-[44px]" onClick={() => setShowReject(false)}>
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="outline"
+                className="min-h-[44px] gap-2 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                onClick={() => setShowReject(true)}
+              >
+                <XCircle className="h-4 w-4" />
+                Reject
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Sessions */}
       <Card>
