@@ -6,7 +6,6 @@ import Link from "next/link";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 interface Student {
@@ -21,7 +20,8 @@ export default function NewSessionPage() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     studentId: "",
-    startTime: "",
+    date: "",
+    time: "",
     duration: "45",
   });
 
@@ -33,19 +33,25 @@ export default function NewSessionPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!form.date || !form.time) return;
+
     setLoading(true);
+    const startTime = `${form.date}T${form.time}`;
     const res = await fetch("/api/admin/sessions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         studentId: form.studentId,
-        startTime: form.startTime,
+        startTime,
         duration: parseInt(form.duration),
       }),
     });
     setLoading(false);
     if (res.ok) router.push("/admin/schedule");
   }
+
+  const selectClass =
+    "flex h-10 w-full rounded-card border border-input bg-surface px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
   return (
     <div className="space-y-6 p-6 lg:p-8">
@@ -63,7 +69,7 @@ export default function NewSessionPage() {
             <div className="space-y-2">
               <Label>Student</Label>
               <select
-                className="flex h-10 w-full rounded-card border border-input bg-surface px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className={selectClass}
                 value={form.studentId}
                 onChange={(e) => setForm({ ...form, studentId: e.target.value })}
                 required
@@ -75,20 +81,33 @@ export default function NewSessionPage() {
               </select>
             </div>
 
-            <div className="space-y-2">
-              <Label>Date & Time</Label>
-              <Input
-                type="datetime-local"
-                value={form.startTime}
-                onChange={(e) => setForm({ ...form, startTime: e.target.value })}
-                required
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label>Date</Label>
+                <input
+                  type="date"
+                  className={selectClass}
+                  value={form.date}
+                  onChange={(e) => setForm({ ...form, date: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Time</Label>
+                <input
+                  type="time"
+                  className={selectClass}
+                  value={form.time}
+                  onChange={(e) => setForm({ ...form, time: e.target.value })}
+                  required
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
               <Label>Duration</Label>
               <select
-                className="flex h-10 w-full rounded-card border border-input bg-surface px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className={selectClass}
                 value={form.duration}
                 onChange={(e) => setForm({ ...form, duration: e.target.value })}
               >
