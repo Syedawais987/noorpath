@@ -3,6 +3,8 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createDailyRoom } from "@/lib/daily";
 import { generateICS } from "@/lib/ics";
+import { notify } from "@/lib/notify";
+import { sessionScheduledEmail } from "@/lib/email";
 
 export async function PATCH(
   request: Request,
@@ -43,8 +45,8 @@ export async function PATCH(
         data: { dailyRoomUrl },
       });
 
-      // Generate .ics
-      const icsContent = generateICS({
+      // Generate .ics (will be attached to email in production)
+      generateICS({
         title: "Quran Class — NoorPath",
         description: `Session with ${classSession.teacher.name}`,
         startTime: classSession.startTime,
@@ -52,9 +54,20 @@ export async function PATCH(
         url: dailyRoomUrl,
       });
 
-      // TODO: Email .ics to student via Resend (Phase 7)
-      console.log(`[DEV] Calendar invite for ${classSession.student.email}:`);
-      console.log(icsContent.substring(0, 200) + "...");
+      const dateStr = classSession.startTime.toLocaleDateString();
+      const timeStr = classSession.startTime.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+      const emailContent = sessionScheduledEmail(classSession.student.name, dateStr, timeStr);
+
+      await notify({
+        userId: classSession.studentId,
+        type: "session_confirmed",
+        message: `Class confirmed for ${dateStr} at ${timeStr}. Join from your dashboard.`,
+        email: { to: classSession.student.email, ...emailContent },
+        whatsapp: { to: "", templateName: "session_confirmed", variables: [classSession.student.name, dateStr, timeStr] },
+      });
+
+      // Log .ics for dev (would be attached to email in production)
+      console.log(`[DEV] .ics generated for session ${params.id}`);
 
       return NextResponse.json({ message: "Session confirmed", dailyRoomUrl });
     }

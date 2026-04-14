@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendEmail, sessionReminderEmail } from "@/lib/email";
+import { sendWhatsApp } from "@/lib/whatsapp";
 
 export async function GET(request: Request) {
   // Verify cron secret in production
@@ -45,22 +47,29 @@ export async function GET(request: Request) {
 
     // 24h reminders — email + WhatsApp
     for (const s of sessions24h) {
-      // TODO: Send email via Resend (Phase 7)
-      console.log(
-        `[DEV] 24h reminder email for ${s.student.email}: session at ${s.startTime.toISOString()}`,
-      );
+      const dateStr = s.startTime.toLocaleDateString();
+      const timeStr = s.startTime.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+      const emailContent = sessionReminderEmail(s.student.name, dateStr, timeStr);
+      await sendEmail({ to: s.student.email, ...emailContent });
 
       if (s.student.whatsappOptedIn && s.student.phone) {
-        // TODO: Send WhatsApp via Meta API (Phase 7)
-        console.log(`[DEV] 24h WhatsApp reminder for ${s.student.phone}`);
+        await sendWhatsApp({
+          to: s.student.phone,
+          templateName: "session_reminder",
+          variables: [s.student.name, dateStr, timeStr],
+        });
       }
     }
 
     // 1h reminders — WhatsApp only
     for (const s of sessions1h) {
       if (s.student.whatsappOptedIn && s.student.phone) {
-        // TODO: Send WhatsApp via Meta API (Phase 7)
-        console.log(`[DEV] 1h WhatsApp reminder for ${s.student.phone}`);
+        const timeStr = s.startTime.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+        await sendWhatsApp({
+          to: s.student.phone,
+          templateName: "session_reminder_1h",
+          variables: [s.student.name, timeStr],
+        });
       }
     }
 

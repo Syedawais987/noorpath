@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { notify } from "@/lib/notify";
+import { enrollmentApprovedEmail, enrollmentRejectedEmail } from "@/lib/email";
 
 export async function PATCH(
   request: Request,
@@ -63,15 +65,22 @@ export async function PATCH(
 
       const setPasswordUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`;
 
-      // TODO: Send "set your password" email via Resend (Phase 7)
-      console.log(
-        `[DEV] Enrollment approved — "Set your password" link for ${enrollment.user.email}: ${setPasswordUrl}`,
-      );
+      const emailContent = enrollmentApprovedEmail(enrollment.user.name, setPasswordUrl);
+      await notify({
+        userId: enrollment.user.id,
+        type: "enrollment_approved",
+        message: "Your enrollment has been approved! Check your email to set your password.",
+        email: { to: enrollment.user.email, ...emailContent },
+        whatsapp: { to: enrollment.user.phone || "", templateName: "enrollment_approved", variables: [enrollment.user.name] },
+      });
     } else {
-      // TODO: Send rejection email via Resend (Phase 7)
-      console.log(
-        `[DEV] Enrollment rejected email would be sent to ${enrollment.user.email}`,
-      );
+      const emailContent = enrollmentRejectedEmail(enrollment.user.name, adminMessage);
+      await notify({
+        userId: enrollment.user.id,
+        type: "enrollment_rejected",
+        message: `Your enrollment was not approved.${adminMessage ? ` Reason: ${adminMessage}` : ""}`,
+        email: { to: enrollment.user.email, ...emailContent },
+      });
     }
 
     return NextResponse.json({ message: `Enrollment ${status.toLowerCase()} successfully` });

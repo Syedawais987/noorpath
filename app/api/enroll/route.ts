@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { enrollmentSchema } from "@/lib/validations/enrollment";
+import { sendEmail, enrollmentConfirmationEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
@@ -104,8 +105,9 @@ export async function POST(request: Request) {
       });
     });
 
-    // TODO: Send confirmation email via Resend (Phase 7)
-    console.log(`[DEV] Enrollment confirmation email would be sent to ${data.email}`);
+    // Send confirmation email
+    const emailContent = enrollmentConfirmationEmail(data.name);
+    await sendEmail({ to: data.email, ...emailContent });
 
     return NextResponse.json(
       { message: "Enrollment submitted successfully" },

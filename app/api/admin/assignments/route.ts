@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { notify } from "@/lib/notify";
+import { assignmentPostedEmail } from "@/lib/email";
 
 export async function GET() {
   try {
@@ -38,6 +40,18 @@ export async function POST(request: Request) {
         dueDate: body.dueDate ? new Date(body.dueDate) : null,
       },
     });
+
+    const student = await prisma.user.findUnique({ where: { id: body.studentId }, select: { name: true, email: true } });
+    if (student) {
+      const emailContent = assignmentPostedEmail(student.name, body.title);
+      await notify({
+        userId: body.studentId,
+        type: "assignment_posted",
+        message: `New assignment: ${body.title}`,
+        email: { to: student.email, ...emailContent },
+        whatsapp: { to: "", templateName: "assignment_posted", variables: [student.name, body.title] },
+      });
+    }
 
     return NextResponse.json({ assignment }, { status: 201 });
   } catch {

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { notify } from "@/lib/notify";
+import { invoiceCreatedEmail } from "@/lib/email";
 
 export async function GET() {
   try {
@@ -37,6 +39,20 @@ export async function POST(request: Request) {
         dueDate: new Date(body.dueDate),
       },
     });
+
+    const student = await prisma.user.findUnique({ where: { id: body.studentId }, select: { name: true, email: true } });
+    if (student) {
+      const amountStr = `${body.currency || "PKR"} ${parseFloat(body.amount).toLocaleString()}`;
+      const dueDateStr = new Date(body.dueDate).toLocaleDateString();
+      const emailContent = invoiceCreatedEmail(student.name, amountStr, dueDateStr);
+      await notify({
+        userId: body.studentId,
+        type: "invoice_created",
+        message: `New invoice: ${amountStr} due ${dueDateStr}`,
+        email: { to: student.email, ...emailContent },
+        whatsapp: { to: "", templateName: "invoice_created", variables: [student.name, amountStr, dueDateStr] },
+      });
+    }
 
     return NextResponse.json({ invoice }, { status: 201 });
   } catch {
