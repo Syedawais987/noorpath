@@ -1,0 +1,43 @@
+{
+  "common": {
+    "appName": "نور پاتھ",
+    "tagline": "آن لائن قرآن سیکھیں",
+    "enrollNow": "ابھی داخلہ لیں",
+    "viewSchedule": "شیڈول دیکھیں",
+    "login": "لاگ ان",
+    "register": "رجسٹر",
+    "logout": "لاگ آؤٹ",
+    "dashboard": "ڈیش بورڈ",
+    "settings": "ترتیبات",
+    "profile": "پروفائل",
+    "loading": "لوڈ ہو رہا ہے...",
+    "save": "محفوظ کریں",
+    "cancel": "منسوخ",
+    "delete": "حذف کریں",
+    "edit": "ترمیم",
+    "submit": "جمع کرائیں",
+    "back": "واپس",
+    "next": "اگلا",
+    "search": "تلاش",
+    "noResults": "کوئی نتائج نہیں ملے"
+  },
+  "nav": {
+    "home": "ہوم",
+    "about": "ہمارے بارے میں",
+    "courses": "کورسز",
+    "pricing": "قیمتیں",
+    "faq": "سوالات",
+    "contact": "رابطہ"
+  },
+  "landing": {
+    "heroTitle": "علمہ ای دین کے ساتھ قرآن سیکھیں",
+    "heroSubtitle": "ذاتی نوعیت کے قرآن کے اسباق — ناظرہ، حفظ، تجوید اور ترجمہ",
+    "aboutTitle": "اپنے استاد کے بارے میں",
+    "coursesTitle": "آپ کیا سیکھیں گے",
+    "howItWorksTitle": "یہ کیسے کام کرتا ہے",
+    "testimonialsTitle": "طلباء کی رائے",
+    "pricingTitle": "قیمتیں",
+    "faqTitle": "اکثر پوچھے گئے سوالات",
+    "ctaTitle": "آج ہی اپنا قرآنی سفر شروع کریں"
+  }
+}

@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: #1B4332;
+    --primary-foreground: #FFFFFF;
+    --secondary: #D4AF37;
+    --secondary-foreground: #1A1A2E;
+    --background: #FAF7F2;
+    --surface: #FFFFFF;
+    --foreground: #1A1A2E;
+    --muted: #6B7280;
+    --muted-foreground: #6B7280;
+    --accent: #C8E6C9;
+    --accent-foreground: #1B4332;
+    --destructive: #DC2626;
+    --destructive-foreground: #FFFFFF;
+    --border: #E5E7EB;
+    --input: #E5E7EB;
+    --ring: #1B4332;
+    --radius: 8px;
+  }
+
+  .dark {
+    --primary: #2D6A4F;
+    --primary-foreground: #FFFFFF;
+    --secondary: #D4AF37;
+    --secondary-foreground: #FAF7F2;
+    --background: #0F1A15;
+    --surface: #1A2B23;
+    --foreground: #F0EDE8;
+    --muted: #9CA3AF;
+    --muted-foreground: #9CA3AF;
+    --accent: #1B4332;
+    --accent-foreground: #C8E6C9;
+    --destructive: #EF4444;
+    --destructive-foreground: #FFFFFF;
+    --border: #2D3B33;
+    --input: #2D3B33;
+    --ring: #2D6A4F;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  /* Focus ring styles — accessible, not browser default */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

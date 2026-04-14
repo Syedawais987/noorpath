@@ -1,0 +1,43 @@
+{
+  "common": {
+    "appName": "NoorPath",
+    "tagline": "Learn Quran Online",
+    "enrollNow": "Enroll Now",
+    "viewSchedule": "View Schedule",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "profile": "Profile",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "noResults": "No results found"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "courses": "Courses",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "contact": "Contact"
+  },
+  "landing": {
+    "heroTitle": "Learn Quran with Alma E Deen",
+    "heroSubtitle": "Personalized one-on-one Quran lessons — Nazra, Hifz, Tajweed & Translation",
+    "aboutTitle": "About Your Teacher",
+    "coursesTitle": "What You'll Learn",
+    "howItWorksTitle": "How It Works",
+    "testimonialsTitle": "What Students Say",
+    "pricingTitle": "Pricing",
+    "faqTitle": "Frequently Asked Questions",
+    "ctaTitle": "Start Your Quran Journey Today"
+  }
+}
