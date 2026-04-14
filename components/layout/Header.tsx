@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
+import { BookOpen, LogOut, User } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Button } from "@/components/ui/button";
 
@@ -23,6 +24,10 @@ function smoothScroll(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
 }
 
 export function Header() {
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === "authenticated";
+  const isTeacher = session?.user?.role === "TEACHER";
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-surface/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-content items-center justify-between px-section-mobile lg:px-section-desktop">
@@ -37,7 +42,7 @@ export function Header() {
               key={link.href}
               href={link.href}
               onClick={(e) => smoothScroll(e, link.href)}
-              className="min-h-[44px] flex items-center rounded-card px-3 py-2 text-sm font-medium text-muted transition-colors hover:text-primary"
+              className="flex min-h-[44px] items-center rounded-card px-3 py-2 text-sm font-medium text-muted transition-colors hover:text-primary"
             >
               {link.label}
             </a>
@@ -46,9 +51,35 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Button size="sm" className="hidden min-h-[44px] sm:inline-flex" asChild>
-            <Link href="/enroll">Enroll Now</Link>
-          </Button>
+
+          {isLoggedIn ? (
+            <>
+              <Button size="sm" variant="ghost" className="hidden min-h-[44px] gap-2 sm:inline-flex" asChild>
+                <Link href={isTeacher ? "/admin" : "/dashboard"}>
+                  <User className="h-4 w-4" />
+                  {session.user.name?.split(" ")[0]}
+                </Link>
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="min-h-[44px]"
+                onClick={() => signOut({ callbackUrl: "/" })}
+                aria-label="Sign out"
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button size="sm" variant="ghost" className="hidden min-h-[44px] sm:inline-flex" asChild>
+                <Link href="/login">Login</Link>
+              </Button>
+              <Button size="sm" className="hidden min-h-[44px] sm:inline-flex" asChild>
+                <Link href="/enroll">Enroll Now</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>

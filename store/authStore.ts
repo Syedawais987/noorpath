@@ -1,11 +1,13 @@
 import { create } from "zustand";
 
-interface AuthState {
-  isAuthenticated: boolean;
-  setAuthenticated: (value: boolean) => void;
+interface AuthUIState {
+  isLoginModalOpen: boolean;
+  openLoginModal: () => void;
+  closeLoginModal: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  isAuthenticated: false,
-  setAuthenticated: (value) => set({ isAuthenticated: value }),
+export const useAuthStore = create<AuthUIState>((set) => ({
+  isLoginModalOpen: false,
+  openLoginModal: () => set({ isLoginModalOpen: true }),
+  closeLoginModal: () => set({ isLoginModalOpen: false }),
 }));

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Amiri, Plus_Jakarta_Sans, Noto_Nastaliq_Urdu } from "next/font/google";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { SessionProvider } from "@/components/layout/SessionProvider";
 import "./globals.css";
 
 const amiri = Amiri({
@@ -69,9 +70,16 @@ export default function RootLayout({
       <body
         className={`${amiri.variable} ${jakarta.variable} ${urdu.variable} font-body antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          {children}
-        </ThemeProvider>
+        <SessionProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

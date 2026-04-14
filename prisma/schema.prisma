@@ -40,18 +40,21 @@ enum InvoiceStatus {
 }
 
 model User {
-  id                String   @id @default(cuid())
-  email             String   @unique
-  passwordHash      String?  @map("password_hash")
-  role              Role     @default(STUDENT)
+  id                String    @id @default(cuid())
+  email             String    @unique
+  emailVerified     DateTime? @map("email_verified")
+  passwordHash      String?   @map("password_hash")
+  image             String?
+  role              Role      @default(STUDENT)
   name              String
   phone             String?
-  timezone          String   @default("UTC")
-  preferredLanguage String   @default("en") @map("preferred_language")
-  whatsappOptedIn   Boolean  @default(false) @map("whatsapp_opted_in")
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedAt         DateTime @updatedAt @map("updated_at")
+  timezone          String    @default("UTC")
+  preferredLanguage String    @default("en") @map("preferred_language")
+  whatsappOptedIn   Boolean   @default(false) @map("whatsapp_opted_in")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
 
+  accounts        Account[]
   studentProfile  StudentProfile?
   teacherSessions Session[]       @relation("TeacherSessions")
   studentSessions Session[]       @relation("StudentSessions")
@@ -61,6 +64,36 @@ model User {
   notifications   Notification[]
 
   @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+  @@map("password_reset_tokens")
 }
 
 model StudentProfile {
