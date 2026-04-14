@@ -25,9 +25,38 @@ const urdu = Noto_Nastaliq_Urdu({
 });
 
 export const metadata: Metadata = {
-  title: "NoorPath — Quran Teaching Platform",
+  title: "NoorPath — Learn Quran Online with Alma E Deen",
   description:
-    "Learn Quran online with personalized one-on-one sessions. Nazra, Hifz, Tajweed, and Translation classes by Alma E Deen.",
+    "Personalized one-on-one Quran lessons online. Learn Nazra, Hifz, Tajweed, and Translation with a certified teacher. Enroll today.",
+  keywords: [
+    "Quran classes online",
+    "learn Quran",
+    "Nazra",
+    "Hifz",
+    "Tajweed",
+    "Quran translation",
+    "online Quran teacher",
+    "Alma E Deen",
+    "NoorPath",
+  ],
+  openGraph: {
+    title: "NoorPath — Learn Quran Online with Alma E Deen",
+    description:
+      "Personalized one-on-one Quran lessons. Nazra, Hifz, Tajweed & Translation. Enroll today.",
+    type: "website",
+    locale: "en_US",
+    siteName: "NoorPath",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NoorPath — Learn Quran Online",
+    description:
+      "Personalized one-on-one Quran lessons with a certified teacher. Enroll today.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
