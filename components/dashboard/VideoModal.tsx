@@ -12,7 +12,7 @@ interface VideoModalProps {
 function isValidDailyUrl(url: string): boolean {
   try {
     const parsed = new URL(url);
-    return parsed.hostname.endsWith(".daily.co");
+    return parsed.hostname.endsWith(".daily.co") || parsed.hostname === "meet.jit.si";
   } catch {
     return false;
   }
