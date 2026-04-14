@@ -36,13 +36,14 @@ export default function NewSessionPage() {
     if (!form.date || !form.time) return;
 
     setLoading(true);
-    const startTime = `${form.date}T${form.time}`;
+    // Convert local date+time to UTC ISO string so server stores correct time
+    const localDate = new Date(`${form.date}T${form.time}`);
     const res = await fetch("/api/admin/sessions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         studentId: form.studentId,
-        startTime,
+        startTime: localDate.toISOString(),
         duration: parseInt(form.duration),
       }),
     });

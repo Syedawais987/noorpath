@@ -24,7 +24,7 @@ export default function SchedulePage() {
     await fetch("/api/sessions/request", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(slot),
+      body: JSON.stringify({ ...slot, timezoneOffset: new Date().getTimezoneOffset() }),
     });
     setBooking(false);
     refetch();
