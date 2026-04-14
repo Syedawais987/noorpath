@@ -66,7 +66,7 @@ export async function PATCH(
 
       const dateStr = classSession.startTime.toLocaleDateString();
       const timeStr = classSession.startTime.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
-      const emailContent = sessionScheduledEmail(classSession.student.name, dateStr, timeStr);
+      const emailContent = sessionScheduledEmail(classSession.student.name, dateStr, timeStr, dailyRoomUrl);
 
       await notify({
         userId: classSession.studentId,

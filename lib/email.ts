@@ -76,15 +76,18 @@ export function enrollmentRejectedEmail(name: string, reason?: string) {
   };
 }
 
-export function sessionScheduledEmail(name: string, date: string, time: string) {
+export function sessionScheduledEmail(name: string, date: string, time: string, joinUrl?: string) {
   const n = escapeHtml(name);
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://noorpath-seven.vercel.app";
   return {
     subject: "New Class Scheduled — NoorPath",
     html: `
       <h2>Assalamu Alaikum ${n},</h2>
-      <p>A new class has been scheduled for you:</p>
-      <p><strong>Date:</strong> ${escapeHtml(date)}<br/><strong>Time:</strong> ${escapeHtml(time)}</p>
-      <p>You can join the class from your dashboard 10 minutes before the session.</p>
+      <p>A new class has been confirmed for you:</p>
+      <p><strong>Date:</strong> ${escapeHtml(date)}<br/><strong>Time:</strong> ${escapeHtml(time)} (UTC)</p>
+      <p>Check your <a href="${appUrl}/dashboard/schedule" style="color:#1B4332;font-weight:600;">dashboard</a> for the exact time in your timezone.</p>
+      ${joinUrl ? `<p><a href="${encodeURI(joinUrl)}" style="display:inline-block;padding:12px 24px;background:#1B4332;color:white;text-decoration:none;border-radius:8px;">Join Class</a></p>` : ""}
+      <p>The Join Class button will appear on your dashboard 10 minutes before the session.</p>
       <p>JazakAllahu Khairan,<br/>NoorPath Team</p>
     `,
   };

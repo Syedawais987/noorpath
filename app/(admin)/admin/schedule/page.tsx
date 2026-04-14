@@ -16,6 +16,7 @@ interface Session {
   startTime: string;
   endTime: string;
   status: string;
+  dailyRoomUrl: string | null;
   student: { name: string };
   sessionNote: { attendanceStatus: string; tajweedScore: number | null; content: string | null } | null;
 }
@@ -157,36 +158,32 @@ export default function AdminSchedulePage() {
                     <Badge variant={s.status === "COMPLETED" ? "accent" : s.status === "CANCELLED" ? "destructive" : "secondary"}>
                       {s.status}
                     </Badge>
-                    {s.status === "SCHEDULED" && !s.sessionNote && (
-                      <>
-                        {!s.sessionNote && (
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            className="min-h-[44px]"
-                            disabled={confirmingId === s.id}
-                            onClick={async () => {
-                              setConfirmingId(s.id);
-                              await fetch(`/api/sessions/${s.id}`, {
-                                method: "PATCH",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ action: "confirm" }),
-                              });
-                              setConfirmingId(null);
-                              fetchData();
-                            }}
-                          >
-                            {confirmingId === s.id ? <Loader2 className="h-4 w-4 animate-spin" /> : "Confirm"}
-                          </Button>
-                        )}
-                        <Button size="sm" variant="outline" className="min-h-[44px]" onClick={() => setNoteModal(s.id)}>
-                          Add Notes
-                        </Button>
-                      </>
+                    {s.status === "SCHEDULED" && !s.dailyRoomUrl && (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="min-h-[44px]"
+                        disabled={confirmingId === s.id}
+                        onClick={async () => {
+                          setConfirmingId(s.id);
+                          await fetch(`/api/sessions/${s.id}`, {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ action: "confirm" }),
+                          });
+                          setConfirmingId(null);
+                          fetchData();
+                        }}
+                      >
+                        {confirmingId === s.id ? <Loader2 className="h-4 w-4 animate-spin" /> : "Confirm"}
+                      </Button>
                     )}
-                    {s.status === "SCHEDULED" && s.sessionNote && (
+                    {s.status === "SCHEDULED" && s.dailyRoomUrl && (
+                      <Badge variant="accent">Confirmed</Badge>
+                    )}
+                    {s.status === "SCHEDULED" && (
                       <Button size="sm" variant="outline" className="min-h-[44px]" onClick={() => setNoteModal(s.id)}>
-                        Edit Notes
+                        {s.sessionNote ? "Edit Notes" : "Add Notes"}
                       </Button>
                     )}
                   </div>
