@@ -12,8 +12,8 @@ const courses = [
   {
     name: "Nazra",
     icon: <NazraIcon />,
-    pricePKR: "6,000",
-    priceUSD: "30",
+    pricePKR: "10,000",
+    priceUSD: "50",
     period: "/ month",
     schedule: "Mon – Fri",
     duration: "30 min / session",
@@ -32,8 +32,8 @@ const courses = [
   {
     name: "Hifz",
     icon: <HifzIcon />,
-    pricePKR: "10,000",
-    priceUSD: "50",
+    pricePKR: "20,000",
+    priceUSD: "100",
     period: "/ month",
     schedule: "Mon – Fri",
     duration: "45 min / session",
@@ -52,8 +52,8 @@ const courses = [
   {
     name: "Tajweed",
     icon: <TajweedIcon />,
-    pricePKR: "8,000",
-    priceUSD: "40",
+    pricePKR: "15,000",
+    priceUSD: "75",
     period: "/ month",
     schedule: "3x per week",
     duration: "45 min / session",
@@ -72,8 +72,8 @@ const courses = [
   {
     name: "Translation",
     icon: <TranslationIcon />,
-    pricePKR: "6,000",
-    priceUSD: "30",
+    pricePKR: "8,000",
+    priceUSD: "40",
     period: "/ month",
     schedule: "2x per week",
     duration: "45 min / session",
