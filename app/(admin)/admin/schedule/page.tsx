@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { Plus, Trash2, Loader2 } from "lucide-react";
+import { Plus, Trash2, Loader2, Video } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -179,7 +179,15 @@ export default function AdminSchedulePage() {
                       </Button>
                     )}
                     {s.status === "SCHEDULED" && s.dailyRoomUrl && (
-                      <Badge variant="accent">Confirmed</Badge>
+                      <>
+                        <Badge variant="accent">Confirmed</Badge>
+                        <Button size="sm" className="min-h-[44px] gap-2" asChild>
+                          <a href={s.dailyRoomUrl} target="_blank" rel="noopener noreferrer">
+                            <Video className="h-4 w-4" />
+                            Join
+                          </a>
+                        </Button>
+                      </>
                     )}
                     {s.status === "SCHEDULED" && (
                       <Button size="sm" variant="outline" className="min-h-[44px]" onClick={() => setNoteModal(s.id)}>
