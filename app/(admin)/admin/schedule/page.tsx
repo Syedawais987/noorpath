@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Loader2 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +35,7 @@ export default function AdminSchedulePage() {
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [newSlot, setNewSlot] = useState({ dayOfWeek: "1", startTime: "09:00", endTime: "10:00" });
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
   const [noteModal, setNoteModal] = useState<string | null>(null);
   const [noteForm, setNoteForm] = useState({ content: "", studentFeedback: "", tajweedScore: "", attendanceStatus: "PRESENT" });
 
@@ -156,9 +157,36 @@ export default function AdminSchedulePage() {
                     <Badge variant={s.status === "COMPLETED" ? "accent" : s.status === "CANCELLED" ? "destructive" : "secondary"}>
                       {s.status}
                     </Badge>
-                    {s.status === "SCHEDULED" && (
+                    {s.status === "SCHEDULED" && !s.sessionNote && (
+                      <>
+                        {!s.sessionNote && (
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="min-h-[44px]"
+                            disabled={confirmingId === s.id}
+                            onClick={async () => {
+                              setConfirmingId(s.id);
+                              await fetch(`/api/sessions/${s.id}`, {
+                                method: "PATCH",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ action: "confirm" }),
+                              });
+                              setConfirmingId(null);
+                              fetchData();
+                            }}
+                          >
+                            {confirmingId === s.id ? <Loader2 className="h-4 w-4 animate-spin" /> : "Confirm"}
+                          </Button>
+                        )}
+                        <Button size="sm" variant="outline" className="min-h-[44px]" onClick={() => setNoteModal(s.id)}>
+                          Add Notes
+                        </Button>
+                      </>
+                    )}
+                    {s.status === "SCHEDULED" && s.sessionNote && (
                       <Button size="sm" variant="outline" className="min-h-[44px]" onClick={() => setNoteModal(s.id)}>
-                        Add Notes
+                        Edit Notes
                       </Button>
                     )}
                   </div>
