@@ -1,34 +1,34 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BookOpen, BookMarked, Mic, Languages } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { NazraIcon, HifzIcon, TajweedIcon, TranslationIcon } from "@/components/ui/custom-icons";
 
 const courses = [
   {
-    icon: <BookOpen className="h-8 w-8 text-primary" />,
+    icon: <NazraIcon />,
     title: "Nazra",
     description:
       "Learn to read the Quran fluently with correct pronunciation. Perfect for beginners starting their Quran journey.",
     level: "Beginner",
   },
   {
-    icon: <BookMarked className="h-8 w-8 text-primary" />,
+    icon: <HifzIcon />,
     title: "Hifz",
     description:
       "Memorize the Quran with structured guidance, revision plans, and regular progress tracking.",
     level: "All Levels",
   },
   {
-    icon: <Mic className="h-8 w-8 text-primary" />,
+    icon: <TajweedIcon />,
     title: "Tajweed",
     description:
       "Master the rules of Quranic recitation — proper articulation points, characteristics, and melody.",
     level: "Intermediate",
   },
   {
-    icon: <Languages className="h-8 w-8 text-primary" />,
+    icon: <TranslationIcon />,
     title: "Translation",
     description:
       "Understand the meaning of what you recite. Word-by-word translation and tafseer for deeper comprehension.",

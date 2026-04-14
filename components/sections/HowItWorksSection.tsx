@@ -1,25 +1,25 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ClipboardList, CalendarCheck, Video } from "lucide-react";
+import { EnrollIcon, ScheduleIcon, LearnIcon } from "@/components/ui/custom-icons";
 
 const steps = [
   {
-    icon: <ClipboardList className="h-8 w-8 text-primary-foreground" />,
+    icon: <EnrollIcon />,
     number: "1",
     title: "Enroll",
     description:
       "Fill out a quick enrollment form with your details, learning goals, and preferred schedule.",
   },
   {
-    icon: <CalendarCheck className="h-8 w-8 text-primary-foreground" />,
+    icon: <ScheduleIcon />,
     number: "2",
     title: "Schedule",
     description:
       "Once approved, book your class times from available slots that suit your timezone.",
   },
   {
-    icon: <Video className="h-8 w-8 text-primary-foreground" />,
+    icon: <LearnIcon />,
     number: "3",
     title: "Learn",
     description:

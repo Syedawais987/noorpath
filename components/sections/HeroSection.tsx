@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { BookOpen, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -67,10 +68,14 @@ export function HeroSection() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3, ease: "easeOut", delay: 0.1 }}
         >
-          <div className="relative h-64 w-64 overflow-hidden rounded-full border-4 border-secondary/30 bg-primary-foreground/10 sm:h-80 sm:w-80">
-            <div className="flex h-full w-full items-center justify-center">
-              <BookOpen className="h-24 w-24 text-secondary/50" />
-            </div>
+          <div className="relative h-64 w-64 overflow-hidden rounded-full border-4 border-secondary/30 sm:h-80 sm:w-80">
+            <Image
+              src="/images/hero.png"
+              alt="Alma E Deen — Quran Teacher"
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
         </motion.div>
       </div>

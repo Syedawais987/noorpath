@@ -5,7 +5,7 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 
-const FROM_EMAIL = "NoorPath <noreply@noorpath.com>";
+const FROM_EMAIL = process.env.FROM_EMAIL || "NoorPath <onboarding@resend.dev>";
 
 interface SendEmailOptions {
   to: string;

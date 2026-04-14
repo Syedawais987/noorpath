@@ -41,7 +41,7 @@ export function AboutSection() {
             About Your Teacher
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-muted">
-            Alma E Deen is a passionate Quran teacher dedicated to making Quranic
+            I am a passionate Quran teacher dedicated to making Quranic
             education accessible, personal, and effective. Her approach combines
             traditional teaching methods with modern tools for the best learning
             experience.
