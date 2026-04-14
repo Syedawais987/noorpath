@@ -11,7 +11,7 @@ const credentials = [
   },
   {
     icon: <Clock className="h-6 w-6 text-secondary" />,
-    title: "Years of Experience",
+    title: "5 + Years of Experience",
     description: "Dedicated years of teaching students of all ages and skill levels",
   },
   {

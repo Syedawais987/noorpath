@@ -147,8 +147,8 @@ model Session {
   recordingUrl String?       @map("recording_url")
   createdAt    DateTime      @default(now()) @map("created_at")
 
-  teacher     User          @relation("TeacherSessions", fields: [teacherId], references: [id])
-  student     User          @relation("StudentSessions", fields: [studentId], references: [id])
+  teacher     User          @relation("TeacherSessions", fields: [teacherId], references: [id], onDelete: Cascade)
+  student     User          @relation("StudentSessions", fields: [studentId], references: [id], onDelete: Cascade)
   sessionNote SessionNote?
 
   @@index([studentId, status])
@@ -198,8 +198,8 @@ model Assignment {
   submissionUrl String?          @map("submission_url")
   createdAt     DateTime         @default(now()) @map("created_at")
 
-  student User @relation("StudentAssignments", fields: [studentId], references: [id])
-  teacher User @relation("TeacherAssignments", fields: [teacherId], references: [id])
+  student User @relation("StudentAssignments", fields: [studentId], references: [id], onDelete: Cascade)
+  teacher User @relation("TeacherAssignments", fields: [teacherId], references: [id], onDelete: Cascade)
 
   @@index([studentId, status])
   @@map("assignments")
@@ -227,7 +227,7 @@ model Invoice {
   receiptUrl    String?       @map("receipt_url")
   createdAt     DateTime      @default(now()) @map("created_at")
 
-  student User @relation(fields: [studentId], references: [id])
+  student User @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@index([studentId, status])
   @@index([dueDate])
