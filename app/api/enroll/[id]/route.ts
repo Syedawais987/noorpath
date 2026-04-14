@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import crypto from "crypto";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -43,10 +44,35 @@ export async function PATCH(
       },
     });
 
-    // TODO: Send email notification to student (Phase 7)
-    console.log(
-      `[DEV] Enrollment ${status.toLowerCase()} email would be sent to ${enrollment.user.email}`,
-    );
+    if (status === "APPROVED") {
+      // Generate a password reset token so the student can set their password
+      await prisma.passwordResetToken.deleteMany({
+        where: { email: enrollment.user.email },
+      });
+
+      const token = crypto.randomBytes(32).toString("hex");
+      const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
+      await prisma.passwordResetToken.create({
+        data: {
+          email: enrollment.user.email,
+          token,
+          expires,
+        },
+      });
+
+      const setPasswordUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`;
+
+      // TODO: Send "set your password" email via Resend (Phase 7)
+      console.log(
+        `[DEV] Enrollment approved — "Set your password" link for ${enrollment.user.email}: ${setPasswordUrl}`,
+      );
+    } else {
+      // TODO: Send rejection email via Resend (Phase 7)
+      console.log(
+        `[DEV] Enrollment rejected email would be sent to ${enrollment.user.email}`,
+      );
+    }
 
     return NextResponse.json({ message: `Enrollment ${status.toLowerCase()} successfully` });
   } catch {
