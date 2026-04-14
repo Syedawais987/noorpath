@@ -73,10 +73,36 @@ export async function GET(request: Request) {
       }
     }
 
+    // Overdue invoice check — mark invoices overdue 3 days past due
+    const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+    const overdueInvoices = await prisma.invoice.findMany({
+      where: {
+        status: "PENDING",
+        dueDate: { lte: threeDaysAgo },
+      },
+      include: { student: { select: { id: true, name: true, email: true } } },
+    });
+
+    for (const inv of overdueInvoices) {
+      await prisma.invoice.update({
+        where: { id: inv.id },
+        data: { status: "OVERDUE" },
+      });
+
+      await prisma.notification.create({
+        data: {
+          userId: inv.student.id,
+          type: "invoice_overdue",
+          message: `Invoice of ${inv.currency} ${inv.amount.toLocaleString()} is overdue. Please pay as soon as possible.`,
+        },
+      });
+    }
+
     return NextResponse.json({
       sent: {
         "24h_reminders": sessions24h.length,
         "1h_reminders": sessions1h.length,
+        "overdue_invoices": overdueInvoices.length,
       },
     });
   } catch (error) {

@@ -82,9 +82,16 @@ export default function PaymentsPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant={statusVariant(inv.status)}>{inv.status}</Badge>
+                  {inv.status === "PAID" && (
+                    <Button size="sm" variant="outline" className="min-h-[44px]" asChild>
+                      <a href={`/api/payments/${inv.id}/receipt`} target="_blank" rel="noopener noreferrer">
+                        View Receipt
+                      </a>
+                    </Button>
+                  )}
                   {inv.status === "PENDING" && (
-                    <Button size="sm" variant="secondary" className="min-h-[44px]">
-                      Pay Now
+                    <Button size="sm" variant="secondary" className="min-h-[44px]" disabled>
+                      Pay Now (v2)
                     </Button>
                   )}
                 </div>
