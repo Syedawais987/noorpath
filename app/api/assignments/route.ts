@@ -14,7 +14,9 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json({ assignments });
+    return NextResponse.json({ assignments }, {
+      headers: { "Cache-Control": "private, s-maxage=30, stale-while-revalidate=60" },
+    });
   } catch {
     return NextResponse.json({ assignments: [] });
   }

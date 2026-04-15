@@ -33,7 +33,9 @@ export async function GET(
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ student });
+    return NextResponse.json({ student }, {
+      headers: { "Cache-Control": "private, s-maxage=30, stale-while-revalidate=60" },
+    });
   } catch {
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }

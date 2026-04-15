@@ -38,7 +38,9 @@ export async function GET(request: Request) {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json({ enrollments });
+    return NextResponse.json({ enrollments }, {
+      headers: { "Cache-Control": "private, s-maxage=30, stale-while-revalidate=60" },
+    });
   } catch {
     return NextResponse.json(
       { error: "Something went wrong" },

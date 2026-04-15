@@ -28,6 +28,8 @@ export async function GET() {
       pendingEnrollments,
       sessionsToday,
       totalSessions,
+    }, {
+      headers: { "Cache-Control": "private, s-maxage=10, stale-while-revalidate=30" },
     });
   } catch {
     return NextResponse.json({ error: "Failed" }, { status: 500 });

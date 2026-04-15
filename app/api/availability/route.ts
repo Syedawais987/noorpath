@@ -8,7 +8,9 @@ export async function GET() {
       orderBy: [{ dayOfWeek: "asc" }, { startTime: "asc" }],
     });
 
-    return NextResponse.json({ slots });
+    return NextResponse.json({ slots }, {
+      headers: { "Cache-Control": "private, s-maxage=60, stale-while-revalidate=300" },
+    });
   } catch {
     return NextResponse.json({ slots: [] });
   }

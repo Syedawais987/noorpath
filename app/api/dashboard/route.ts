@@ -40,6 +40,8 @@ export async function GET() {
         pendingAssignments: assignments,
         currentSurah: profile?.progressEntries[0]?.surahName || null,
       },
+    }, {
+      headers: { "Cache-Control": "private, s-maxage=10, stale-while-revalidate=30" },
     });
   } catch {
     return NextResponse.json({ error: "Failed to load" }, { status: 500 });

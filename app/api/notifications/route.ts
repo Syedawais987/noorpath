@@ -15,7 +15,9 @@ export async function GET() {
       take: 20,
     });
 
-    return NextResponse.json({ notifications });
+    return NextResponse.json({ notifications }, {
+      headers: { "Cache-Control": "private, s-maxage=10, stale-while-revalidate=30" },
+    });
   } catch {
     return NextResponse.json({ notifications: [] });
   }

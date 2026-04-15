@@ -42,6 +42,8 @@ export async function GET(request: Request) {
       students,
       total,
       pages: Math.ceil(total / limit),
+    }, {
+      headers: { "Cache-Control": "private, s-maxage=30, stale-while-revalidate=60" },
     });
   } catch {
     return NextResponse.json({ error: "Failed" }, { status: 500 });

@@ -21,7 +21,9 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({ profile: user });
+    return NextResponse.json({ profile: user }, {
+      headers: { "Cache-Control": "private, s-maxage=30, stale-while-revalidate=60" },
+    });
   } catch {
     return NextResponse.json({ error: "Failed to load" }, { status: 500 });
   }

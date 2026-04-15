@@ -26,7 +26,9 @@ export async function GET() {
       orderBy: { startTime: "desc" },
     });
 
-    return NextResponse.json({ sessions });
+    return NextResponse.json({ sessions }, {
+      headers: { "Cache-Control": "private, s-maxage=10, stale-while-revalidate=30" },
+    });
   } catch {
     return NextResponse.json({ sessions: [] });
   }
