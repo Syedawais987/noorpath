@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   Home, Users, Calendar, TrendingUp, BookOpenCheck, CreditCard,
 } from "lucide-react";
@@ -7,6 +8,11 @@ import { NotificationBell } from "@/components/dashboard/NotificationBell";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Admin",
+  robots: { index: false, follow: false, nocache: true },
+};
 
 const navLinks = [
   { href: "/admin", label: "Dashboard", icon: <Home className="h-5 w-5" /> },

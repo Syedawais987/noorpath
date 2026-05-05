@@ -1,0 +1,24 @@
+{
+  "name": "NoorPath — Learn Quran Online",
+  "short_name": "NoorPath",
+  "description": "Personalized one-on-one online Quran classes — Nazra, Hifz, Tajweed, and Translation with a certified teacher.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF7F2",
+  "theme_color": "#1B4332",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-icon",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
