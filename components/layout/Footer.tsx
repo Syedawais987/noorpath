@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BookOpen, Mail, Phone, MessageCircle } from "lucide-react";
+import { whatsappUrl } from "@/lib/contact";
 
 const quickLinks = [
   { href: "#about", label: "About" },
@@ -9,7 +10,7 @@ const quickLinks = [
 ];
 
 const legalLinks: { href: string; label: string; external?: boolean }[] = [
-  { href: "https://wa.me/923326000051", label: "Contact", external: true },
+  { href: whatsappUrl(), label: "Contact", external: true },
   { href: "/login", label: "Student Login" },
 ];
 
@@ -81,7 +82,7 @@ export function Footer() {
             <ul className="mt-3 space-y-2">
               <li>
                 <a
-                  href="https://wa.me/923326000051"
+                  href={whatsappUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground"

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { BookOpen, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { whatsappUrl } from "@/lib/contact";
 
 export function HeroSection() {
   return (
@@ -46,7 +47,7 @@ export function HeroSection() {
               className="min-h-[44px] text-base font-semibold"
               asChild
             >
-              <a href="https://wa.me/923326000051" target="_blank" rel="noopener noreferrer">Contact</a>
+              <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">Contact</a>
             </Button>
             <Button
               size="lg"

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { NazraIcon, HifzIcon, TajweedIcon, TranslationIcon } from "@/components/ui/custom-icons";
+import { whatsappUrl } from "@/lib/contact";
 
 const courses = [
   {
@@ -175,7 +176,15 @@ export function PricingSection() {
                     variant={course.popular ? "secondary" : "default"}
                     asChild
                   >
-                    <a href="https://wa.me/923326000051" target="_blank" rel="noopener noreferrer">Contact</a>
+                    <a
+                      href={whatsappUrl(
+                        `Assalamu Alaikum, I'm interested in the ${course.name} course at NoorPath. Could you please share more details about timings and how to get started?`,
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Contact
+                    </a>
                   </Button>
                 </CardFooter>
               </Card>

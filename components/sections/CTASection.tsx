@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { whatsappUrl } from "@/lib/contact";
 
 export function CTASection() {
   return (
@@ -29,7 +30,7 @@ export function CTASection() {
               className="min-h-[44px] text-base font-semibold"
               asChild
             >
-              <a href="https://wa.me/923326000051" target="_blank" rel="noopener noreferrer">
+              <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
                 Contact
                 <ArrowRight className="ml-2 h-4 w-4" />
               </a>
