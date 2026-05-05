@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
@@ -41,16 +41,16 @@ export default function StudentDetailPage({ params }: { params: { id: string } }
   const [rejectMessage, setRejectMessage] = useState("");
   const [showReject, setShowReject] = useState(false);
 
-  function fetchStudent() {
+  const fetchStudent = useCallback(() => {
     fetch(`/api/admin/students/${params.id}`)
       .then((r) => r.ok ? r.json() : null)
       .then((d) => setStudent(d?.student || null))
       .finally(() => setLoading(false));
-  }
+  }, [params.id]);
 
   useEffect(() => {
     fetchStudent();
-  }, [params.id]);
+  }, [fetchStudent]);
 
   async function handleEnrollmentAction(status: "APPROVED" | "REJECTED") {
     if (!student?.enrollmentRequest) return;
