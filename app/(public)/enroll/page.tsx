@@ -211,7 +211,7 @@ export default function EnrollPage() {
 
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone (optional)</Label>
-                    <Input id="phone" placeholder="+92 300 1234567" {...register("phone")} />
+                    <Input id="phone" placeholder="+92 332 6000051" {...register("phone")} />
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2">

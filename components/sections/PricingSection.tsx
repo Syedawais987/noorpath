@@ -176,7 +176,7 @@ export function PricingSection() {
                     variant={course.popular ? "secondary" : "default"}
                     asChild
                   >
-                    <Link href="/enroll">Enroll Now</Link>
+                    <a href="https://wa.me/923326000051" target="_blank" rel="noopener noreferrer">Contact</a>
                   </Button>
                 </CardFooter>
               </Card>

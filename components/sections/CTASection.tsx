@@ -30,10 +30,10 @@ export function CTASection() {
               className="min-h-[44px] text-base font-semibold"
               asChild
             >
-              <Link href="/enroll">
-                Enroll Now
+              <a href="https://wa.me/923326000051" target="_blank" rel="noopener noreferrer">
+                Contact
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
+              </a>
             </Button>
           </div>
         </motion.div>

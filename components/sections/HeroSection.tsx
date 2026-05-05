@@ -46,7 +46,7 @@ export function HeroSection() {
               className="min-h-[44px] text-base font-semibold"
               asChild
             >
-              <Link href="/enroll">Enroll Now</Link>
+              <a href="https://wa.me/923326000051" target="_blank" rel="noopener noreferrer">Contact</a>
             </Button>
             <Button
               size="lg"

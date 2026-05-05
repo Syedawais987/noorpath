@@ -76,7 +76,7 @@ export function Header() {
                 <Link href="/login">Login</Link>
               </Button>
               <Button size="sm" className="hidden min-h-[44px] sm:inline-flex" asChild>
-                <Link href="/enroll">Enroll Now</Link>
+                <a href="https://wa.me/923326000051" target="_blank" rel="noopener noreferrer">Contact</a>
               </Button>
             </>
           )}

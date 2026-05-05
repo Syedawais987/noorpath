@@ -89,7 +89,7 @@ export default function ProfilePage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone</Label>
-                <Input id="phone" placeholder="+92 300 1234567" {...register("phone")} />
+                <Input id="phone" placeholder="+92 332 6000051" {...register("phone")} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="timezone">Timezone</Label>

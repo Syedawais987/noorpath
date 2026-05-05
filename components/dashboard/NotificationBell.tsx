@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Bell } from "lucide-react";
+import { Bell, CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -44,6 +44,13 @@ export function NotificationBell() {
     );
   }
 
+  async function markAllRead() {
+    await fetch("/api/notifications/read-all", { method: "PATCH" });
+    setNotifications((prev) =>
+      prev.map((n) => ({ ...n, readAt: n.readAt || new Date().toISOString() })),
+    );
+  }
+
   return (
     <div className="relative" ref={ref}>
       <Button
@@ -63,8 +70,17 @@ export function NotificationBell() {
 
       {open && (
         <div className="absolute right-0 top-12 z-50 w-80 rounded-modal border border-border bg-surface shadow-lg">
-          <div className="border-b border-border px-4 py-3">
+          <div className="flex items-center justify-between border-b border-border px-4 py-3">
             <p className="text-sm font-semibold">Notifications</p>
+            {unreadCount > 0 && (
+              <button
+                onClick={markAllRead}
+                className="flex items-center gap-1 text-xs text-primary hover:underline"
+              >
+                <CheckCheck className="h-3 w-3" />
+                Mark all read
+              </button>
+            )}
           </div>
           <div className="max-h-80 overflow-y-auto">
             {notifications.length === 0 ? (
@@ -75,7 +91,7 @@ export function NotificationBell() {
               notifications.map((n) => (
                 <button
                   key={n.id}
-                  onClick={() => markAsRead(n.id)}
+                  onClick={() => !n.readAt && markAsRead(n.id)}
                   className={cn(
                     "w-full border-b border-border px-4 py-3 text-left text-sm transition-colors hover:bg-accent/30",
                     !n.readAt && "bg-accent/10",

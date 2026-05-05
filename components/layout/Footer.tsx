@@ -8,8 +8,8 @@ const quickLinks = [
   { href: "#faq", label: "FAQ" },
 ];
 
-const legalLinks = [
-  { href: "/enroll", label: "Enroll Now" },
+const legalLinks: { href: string; label: string; external?: boolean }[] = [
+  { href: "https://wa.me/923326000051", label: "Contact", external: true },
   { href: "/login", label: "Student Login" },
 ];
 
@@ -53,12 +53,23 @@ export function Footer() {
             <ul className="mt-3 space-y-2">
               {legalLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground"
-                  >
-                    {link.label}
-                  </Link>
+                  {link.external ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className="text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground"
+                    >
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -70,7 +81,7 @@ export function Footer() {
             <ul className="mt-3 space-y-2">
               <li>
                 <a
-                  href="https://wa.me/923001234567"
+                  href="https://wa.me/923326000051"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground"
@@ -90,11 +101,11 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="tel:+923001234567"
+                  href="tel:+923326000051"
                   className="flex items-center gap-2 text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground"
                 >
                   <Phone className="h-4 w-4" />
-                  +92 300 1234567
+                  +92 332 6000051
                 </a>
               </li>
             </ul>
